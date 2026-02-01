@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Forbes Post</title>
+    <link rel="icon" type="image/x-icon" href="images/faviconV3.png">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="scripts/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+    <style type="text/css">
+        @font-face {
+            font-family: "GE SS Two Medium";
+            src: url("Fonts/GESSTwoMedium-Medium.ttf") format("truetype");
+            font-style: normal;
+            font-weight: normal;
+        }
+
+        @font-face {
+            font-family: "Helvetica-Neue";
+            src: url("Fonts/helvetica-neue-normal.ttf") format("truetype");
+            font-style: normal;
+            font-weight: normal;
+        }
+
+        @font-face {
+            font-family: "EuclidCircularB-Semibold";
+            src: url("Fonts/EuclidCircularB-Semibold.ttf") format("truetype");
+            font-style: normal;
+            font-weight: normal;
+        }
+
+        #input-template .post-data-preview {
+            font-family: "EuclidCircularB-Semibold" !important;
+        }
+
+        #arabic-post-template-with-img .post-data-preview {
+            font-family: "GE SS Two Medium" !important;
+        }
+
+        .background-image {
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+            height: 100%;
+            width: 100%;
+        }
+
+        #imagePost,
+        #arabicPost {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn {
+            margin-top: 10px;
+            padding: 12px 24px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 45px;
+            left: 38px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .logo-image {
+            width: 126.85px;
+            height: 32px;
+            display: block;
+        }
+
+        #english-post-template-with-img .container-fluid,
+        #arabic-post-template-with-img .container-fluid {
+            padding-top: 0;
+        }
+
+        #english-post-template-with-img .row,
+        #arabic-post-template-with-img .row {
+            margin-top: 0;
+        }
+
+        #bloc1, #bloc2 {
+            margin-top: 0;
+            padding-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <section id="input-template" class="" style="margin-top: 100px;">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <form class="row g-3">
+                            <select class="form-select custom-select select-language">
+                                <option disabled>Select Language</option>
+                                <option value="English" selected>English</option>
+                                <option value="Arabic">Arabic</option>
+                            </select>
+                            <select class="form-select custom-select show_breaking">
+                                <option disabled>Show Breaking Image</option>
+                                <option value="true">Yes</option>
+                                <option value="false" selected>No</option>
+                            </select>
+                            <select class="form-select custom-select logo_color">
+                                <option disabled>Logo Color</option>
+                                <option value="blackLogo">Black</option>
+                                <option value="whiteLogo" selected>White</option>
+                            </select>
+                            <select class="form-select custom-select post-size">
+                                <option disabled>Post Size</option>
+                                <option value="square">Square (2100×2100)</option>
+                                <option value="portrait" selected>Portrait (1080×1350)</option>
+                            </select>
+                            <div class="col-mdd-6">
+                                <label for="bg-img" class="form-label">Upload Background Image</label>
+                                <input type="file" class="form-control post-img-preview" name="" onchange="readURL(this);"
+                                    id="post-img">
+                            </div>
+                            <div class="col-12">
+                                <label for="data" class="form-label">Add Text</label>
+                                <textarea name="date" class="form-control" id="data" placeholder="Write some text here"
+                                    cols="30" rows="5"></textarea>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" id="hello" class="btn btn-primary mb-2">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <img class="post-img-preview d-none" id="img-src" src="" alt="preview img">
+        </section>
+
+        <section class="d-none" id="english-post-template-with-img" style="margin-top: 25px; margin-bottom: 30px;">
+            <div class="container-fluid">
+                <div class="row align-items-start">
+                    <div class="col-md-4 col-lg-3" style="padding-top: 0;">
+                        <div id="bloc1" class="cool" style="margin-top: 0;">
+                            <form action="">
+                                <div class="col-mdd-6 mb-3">
+                                    <button type="button" class="btn btn-success download-btn w-100">
+                                        <i class="bi bi-download me-2"></i>Download Image
+                                    </button>
+                                </div>
+                                <div class="col-mv-6">
+                                    <label for="bottom-margin-eng" class="form-label">Set Bottom Margin</label>
+                                    <input type="number" class="form-control targetEng mb-2" id="bottom-margin-eng" value="100">
+                                </div>
+                                <div class="col-mv-6">
+                                    <label for="image-vertical-eng" class="form-label">Move Image Up (px)</label>
+                                    <input type="number" class="form-control image-vertical-eng mb-2" id="image-vertical-eng" value="0">
+                                </div>
+                                <div class="col-mv-6">
+                                    <label for="shadow-height-eng" class="form-label">Shadow Height (px)</label>
+                                    <input type="number" class="form-control shadow-height mb-2" id="shadow-height-eng" step="10" value="300">
+                                </div>
+                                <div class="col-mv-6">
+                                    <label for="shadow-opacity-eng" class="form-label">Shadow Opacity (%)</label>
+                                    <input type="number" class="form-control shadow-opacity mb-2" id="shadow-opacity-eng" min="0" max="100" value="85">
+                                </div>
+                                <div class="col-mv-6">
+                                    <label for="font-size-eng" class="form-label">Set Font Size</label>
+                                    <input type="number" class="form-control font-size mb-2" id="font-size-eng" value="28">
+                                </div>
+                                <div class="col-mv-6">
+                                    <label for="position-eng-img" class="form-label">Image Position X (%)</label>
+                                    <input type="number" class="form-control positionEngImg mb-2" id="position-eng-img" value="50">
+                                </div>
+                                <div class="col-mv-6">
+                                    <label for="image-zoom-eng" class="form-label">Image Zoom (%)</label>
+                                    <input type="number" class="form-control image-zoom-eng mb-2" id="image-zoom-eng" min="50" max="200" step="5" value="145">
+                                </div>
+                                <div class="col-mdd-6">
+                                    <label for="line-height-eng" class="form-label">Set Line Height</label>
+                                    <input type="number" class="form-control line-height mb-2" id="line-height-eng" step="0.1" value="1.3">
+                                </div>
+                                <div class="col-mdd-6">
+                                    <label for="text-max-width-eng" class="form-label">Text Max Width (px)</label>
+                                    <input type="number" class="form-control text-max-width mb-2" id="text-max-width-eng" value="400">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-lg-9">
+                        <div id="imagePost" style="width: 540px; height: 675px; margin: 0 auto; position: relative;">
+                            <div class="logo-container" style="position: absolute; top: 45px; left: 38px; z-index: 10; cursor: pointer;">
+                                <img class="logo-image" style="width: 126.85px; height: 32px; display: block;" src="images/LogoW.png" alt="Forbes Logo">
+                            </div>
+                            <div class="bg-img my-0 mx-auto" style="height:100%; position: relative; background-color: #000;">
+                                <div class="image-shadow-group" style="position: absolute; top: 0; left: 0; right: 0; height: 100%; transition: transform 0.3s ease;">
+                                    <div class="background-image Position_Set" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
+                                    <img class="shadow-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.1);" src="images/Shadow.png" alt="">
+                                </div>
+                                <div class="bottom-gradient" style="position: absolute; bottom: 0; left: 0; right: 0; height: 300px; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.765) 30%, rgba(0,0,0,0.425) 60%, rgba(0,0,0,0) 100%); pointer-events: none; z-index: 5;"></div>
+                            </div>
+                            <div class="text-div Margin_Set" style="position: absolute; bottom:100px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; display: flex; flex-direction: column; align-items: center; z-index: 10;" dir="ltr">
+                                <img class="breaking_news_image"
+                                    style="width: 85px; margin-bottom: 10px; display: block;" src="images/BN.png" alt="">
+                                <div class="english-border"
+                                    style="border-top: 6.5px solid red; position: relative; width: 77.5px; margin-bottom: 15px;">
+                                </div>
+                                <p class="post-data-preview"
+                                    style="font-size: 28px; font-family:EuclidCircularB-Semibold; color: #fff; margin: 0; text-align: center; line-height: 1.3; max-width: 400px;">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="d-none" id="arabic-post-template-with-img" style="margin-top: 25px; margin-bottom: 30px;">
+            <div class="container-fluid">
+                <div class="row align-items-start">
+                    <div class="col-md-4 col-lg-3" style="padding-top: 0;">
+                        <div id="bloc2" class="cool" style="margin-top: 0;">
+                            <form action="">
+                                <div class="col-mdd-6 mb-3">
+                                    <button type="button" class="btn btn-success download-btn w-100">
+                                        <i class="bi bi-download me-2"></i>Download Image
+                                    </button>
+                                </div>
+                                <div class="col-mv-6">
+                                    <label for="bottom-margin-ar" class="form-label">Set Bottom Margin</label>
+                                    <input type="number" class="form-control targetAr mb-2" id="bottom-margin-ar" value="100">
+                                </div>
+                                <div class="col-mv-6">
+                                    <label for="image-vertical-ar" class="form-label">Move Image Up (px)</label>
+                                    <input type="number" class="form-control image-vertical-ar mb-2" id="image-vertical-ar" value="0">
+                                </div>
+                                <div class="col-mv-6">
+                                    <label for="shadow-height-ar" class="form-label">Shadow Height (px)</label>
+                                    <input type="number" class="form-control shadow-height mb-2" id="shadow-height-ar" step="10" value="300">
+                                </div>
+                                <div class="col-mv-6">
+                                    <label for="shadow-opacity-ar" class="form-label">Shadow Opacity (%)</label>
+                                    <input type="number" class="form-control shadow-opacity mb-2" id="shadow-opacity-ar" min="0" max="100" value="85">
+                                </div>
+                                <div class="col-mv-6">
+                                    <label for="font-size-ar" class="form-label">Set Font Size</label>
+                                    <input type="number" class="form-control font-size mb-2" id="font-size-ar" value="28">
+                                </div>
+                                <div class="col-mv-6">
+                                    <label for="position-ar-img" class="form-label">Image Position X (%)</label>
+                                    <input type="number" class="form-control positionArImg mb-2" id="position-ar-img" value="50">
+                                </div>
+                                <div class="col-mv-6">
+                                    <label for="image-zoom-ar" class="form-label">Image Zoom (%)</label>
+                                    <input type="number" class="form-control image-zoom-ar mb-2" id="image-zoom-ar" min="50" max="200" step="5" value="145">
+                                </div>
+                                <div class="col-mdd-6">
+                                    <label for="line-height-ar" class="form-label">Set Line Height</label>
+                                    <input type="number" class="form-control line-height mb-2" id="line-height-ar" step="0.1" value="1.3">
+                                </div>
+                                <div class="col-mdd-6">
+                                    <label for="text-max-width-ar" class="form-label">Text Max Width (px)</label>
+                                    <input type="number" class="form-control text-max-width mb-2" id="text-max-width-ar" value="400">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-lg-9">
+                        <div id="arabicPost" style="width: 540px; height: 675px; margin: 0 auto; position: relative;">
+                            <div class="logo-container" style="position: absolute; top: 45px; left: 38px; z-index: 10; cursor: pointer;">
+                                <img class="logo-image" style="width: 126.85px; height: 32px; display: block;" src="images/LogoW.png" alt="Forbes Logo">
+                            </div>
+                            <div class="bg-img my-0 mx-auto" style="height:100%; position: relative; background-color: #000;">
+                                <div class="image-shadow-group" style="position: absolute; top: 0; left: 0; right: 0; height: 100%; transition: transform 0.3s ease;">
+                                    <div class="background-image Position_Set" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
+                                    <img class="shadow-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.1);" src="images/Shadow.png" alt="">
+                                </div>
+                                <div class="bottom-gradient" style="position: absolute; bottom: 0; left: 0; right: 0; height: 300px; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.765) 30%, rgba(0,0,0,0.425) 60%, rgba(0,0,0,0) 100%); pointer-events: none; z-index: 5;"></div>
+                            </div>
+                            <div class="text-div Margin_Set" style="position: absolute; bottom:100px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; display: flex; flex-direction: column; align-items: center; z-index: 10;" dir="rtl">
+                                <img class="breaking_news_image"
+                                    style="width: 85px; margin-bottom: 10px; display: block;" src="images/ajil.png" alt="">
+                                <div class="arabic-border"
+                                    style="border-top: 6.5px solid red; position: relative; direction: rtl; width: 77.5px; margin-bottom: 15px;">
+                                </div>
+                                <p class="post-data-preview"
+                                    style="font-size: 28px; color: #fff; margin: 0; text-align: center; line-height: 1.3; max-width: 400px;">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Set initial logo color (global scope for access across handlers)
+        let currentLogoColor = "whiteLogo";
+
+        $(document).ready(function () {
+
+            // Toggle logo color when clicked
+            $(document).on('click', '.logo-container', function () {
+                if (currentLogoColor === "whiteLogo") {
+                    currentLogoColor = "blackLogo";
+                    $('.logo-image').attr('src', 'images/LogoB.png');
+                } else {
+                    currentLogoColor = "whiteLogo";
+                    $('.logo-image').attr('src', 'images/LogoW.png');
+                }
+            });
+
+            // Margin Controls
+            $(".targetEng").change(function () {
+                $("#imagePost .Margin_Set").css("bottom", $(this).val() + "px");
+            });
+            $(".targetAr").change(function () {
+                $("#arabicPost .Margin_Set").css("bottom", $(this).val() + "px");
+            });
+
+            // Font Controls
+            $(".font-size").change(function () {
+                $(".post-data-preview").css("font-size", $(this).val() + "px");
+            });
+
+            // Red Bar Width Control
+            $(".bar-width").change(function () {
+                $(".english-border, .arabic-border").css("width", $(this).val() + "px");
+            });
+
+            // Red Bar Height Control
+            $(".bar-height").change(function () {
+                $(".english-border, .arabic-border").css("border-top-width", $(this).val() + "px");
+            });
+
+            // Text Max Width Control
+            $(".text-max-width").change(function () {
+                $(".post-data-preview").css("max-width", $(this).val() + "px");
+            });
+
+            // Image Vertical Position Control (moves image + shadow together)
+            $(".image-vertical-eng").change(function () {
+                $("#imagePost .image-shadow-group").css("transform", "translateY(-" + $(this).val() + "px)");
+            });
+            
+            $(".image-vertical-ar").change(function () {
+                $("#arabicPost .image-shadow-group").css("transform", "translateY(-" + $(this).val() + "px)");
+            });
+
+            // Bottom Shadow Opacity Control
+            $(".shadow-opacity").change(function () {
+                let value = parseInt($(this).val());
+                // Clamp value between 0 and 100
+                if (value < 0) value = 0;
+                if (value > 100) value = 100;
+                $(this).val(value);
+
+                // Simple linear opacity control
+                const opacity = value / 100;
+
+                // Gradient with strong bottom fading to transparent
+                const gradientStyle = `linear-gradient(to top, rgba(0,0,0,${opacity}) 0%, rgba(0,0,0,${opacity * 0.7}) 40%, rgba(0,0,0,${opacity * 0.3}) 70%, rgba(0,0,0,0) 100%)`;
+                $(".bottom-gradient").css("background", gradientStyle);
+            });
+
+            // Bottom Shadow Height Control
+            $(".shadow-height").change(function () {
+                $(".bottom-gradient").css("height", $(this).val() + "px");
+            });
+
+            // Image Positioning X (horizontal)
+            $(".positionEngImg").change(function () {
+                const yPos = $(".positionEngImgY").val() || 0;
+                $("#imagePost .background-image").css("background-position", $(this).val() + "% " + yPos + "%");
+            });
+            $(".positionArImg").change(function () {
+                const yPos = $(".positionArImgY").val() || 0;
+                $("#arabicPost .background-image").css("background-position", $(this).val() + "% " + yPos + "%");
+            });
+
+            // Image Positioning Y (vertical)
+            $(".positionEngImgY").change(function () {
+                const xPos = $(".positionEngImg").val() || 50;
+                $("#imagePost .background-image").css("background-position", xPos + "% " + $(this).val() + "%");
+            });
+            $(".positionArImgY").change(function () {
+                const xPos = $(".positionArImg").val() || 50;
+                $("#arabicPost .background-image").css("background-position", xPos + "% " + $(this).val() + "%");
+            });
+
+            // Image Zoom Control
+            $(".image-zoom-eng").change(function () {
+                const zoomValue = $(this).val();
+                $("#imagePost .background-image").css("background-size", zoomValue + "%");
+            });
+            $(".image-zoom-ar").change(function () {
+                const zoomValue = $(this).val();
+                $("#arabicPost .background-image").css("background-size", zoomValue + "%");
+            });
+
+            // Line Height
+            $(".line-height").change(function () {
+                $(".post-data-preview").css("line-height", $(this).val());
+            });
+
+            // Post Size Toggle
+            $('.post-size').change(function () {
+                const postSize = $(this).val();
+                if (postSize === 'square') {
+                    $("#imagePost, #arabicPost").css({
+                        width: '1050px',
+                        height: '1050px'
+                    });
+                    $(".logo-container").css({"top": "90px", "left": "76px"});
+                    $(".logo-image").css({"width": "253.7px", "height": "64px"});
+                    $(".font-size").val(56);
+                    $(".post-data-preview").css("font-size", "56px");
+                    $(".bar-width").val(155);
+                    $(".bar-height").val(13);
+                } else {
+                    $("#imagePost, #arabicPost").css({
+                        width: '540px',
+                        height: '675px'
+                    });
+                    $(".logo-container").css({"top": "45px", "left": "38px"});
+                    $(".logo-image").css({"width": "126.85px", "height": "32px"});
+                    $(".font-size").val(28);
+                    $(".post-data-preview").css("font-size", "28px");
+                    $(".bar-width").val(77.5);
+                    $(".bar-height").val(6.5);
+                }
+            });
+        });
+
+        // Image Upload Handler
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $('.background-image').css('background-image', 'url(' + e.target.result + ')');
+                    $('#img-src').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Download Handler
+        $(document).on('click', '.download-btn', function () {
+            const postContent = $('#english-post-template-with-img').is(':visible') ?
+                document.querySelector('#imagePost') :
+                document.querySelector('#arabicPost');
+
+            const postSize = $('.post-size').val();
+            let scale;
+
+            if (postSize === 'square') {
+                // Square: 1050px preview -> 2100px export (scale 2)
+                scale = 2;
+            } else {
+                // Portrait: 540px width preview -> 1080px export (scale 2)
+                // This gives 1080x1350
+                scale = 2;
+            }
+
+            html2canvas(postContent, {
+                scale: scale,
+                useCORS: true,
+                allowTaint: true,
+                logging: false
+            }).then(canvas => {
+                canvas.toBlob(blob => {
+                    saveAs(blob, 'forbes-post.png');
+                });
+            });
+        });
+
+        // Template Visibility Handler
+        $('#hello').click(function () {
+            // Basic validation - require text input
+            const textValue = $('#data').val().trim();
+            if (!textValue) {
+                alert('Please enter some text for the post.');
+                return;
+            }
+
+            const language = $('.select-language').val();
+            const showBreaking = $('.show_breaking').val() === 'true';
+            const logoColor = $('.logo_color').val();
+
+            // Set initial logo color based on selection
+            if (logoColor === 'blackLogo') {
+                $('.logo-image').attr('src', 'images/LogoB.png');
+                currentLogoColor = "blackLogo";
+            } else {
+                $('.logo-image').attr('src', 'images/LogoW.png');
+                currentLogoColor = "whiteLogo";
+            }
+
+            $('.breaking_news_image').toggle(showBreaking);
+
+            // Apply post size
+            const postSize = $('.post-size').val();
+            if (postSize === 'square') {
+                $("#imagePost, #arabicPost").css({
+                    width: '1050px',
+                    height: '1050px'
+                });
+                $(".logo-container").css({"top": "90px", "left": "76px"});
+                $(".logo-image").css({"width": "253.7px", "height": "64px"});
+                $(".font-size").val(56);
+                $(".post-data-preview").css("font-size", "56px");
+            } else {
+                $("#imagePost, #arabicPost").css({
+                    width: '540px',
+                    height: '675px'
+                });
+                $(".logo-container").css({"top": "45px", "left": "38px"});
+                $(".logo-image").css({"width": "126.85px", "height": "32px"});
+                $(".font-size").val(28);
+                $(".post-data-preview").css("font-size", "28px");
+            }
+
+            if (language === 'English') {
+                $('#english-post-template-with-img').removeClass('d-none');
+                $('#arabic-post-template-with-img').addClass('d-none');
+                $('#imagePost .post-data-preview').text($('#data').val());
+            } else {
+                $('#arabic-post-template-with-img').removeClass('d-none');
+                $('#english-post-template-with-img').addClass('d-none');
+                $('#arabicPost .post-data-preview').text($('#data').val());
+            }
+            $('#input-template').addClass('d-none');
+        });
+    </script>
+</body>
+
+</html>
